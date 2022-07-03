@@ -1,13 +1,9 @@
-import { Component, Fragment } from "react";
-import { Link } from "react-router-dom";
-import faviconService from "../../services/favicon.service";
-import { AppDispatch } from "../../store";
-import { getSecretDecryptedThunk, Secret } from "../../store/slices/secrets";
-import SecretIcon from "../secretIcon/secretIcon";
+import { Component } from "react";
+import { Secret } from "../../store/slices/secrets";
 import TokenModal from "../tokenModal/tokenModal";
 import LoginContent, { getLoginContentFieldsFromForm } from "./login/loginContent";
 import LoginFlags, { getLoginFlagsFieldsFromForm } from "./login/loginFlags";
-import SecretContent, { getSecretContentFieldsFromForm, secretContentFields } from "./secret/secretContent";
+import SecretContent, { getSecretContentFieldsFromForm } from "./secret/secretContent";
 import SecretFlags, { getSecretFlagsFieldsFromForm } from "./secret/secretFlags";
 export interface SecretDetailProps {
     item: Secret;

@@ -17,7 +17,6 @@ export function getLoginContentFieldsFromForm(event: any) {
 class LoginContent extends Component<LoginProps> {
     copy(value: any) {
         navigator.clipboard.writeText(value);
-    
     }
     render() {
         const { item } = this.props;

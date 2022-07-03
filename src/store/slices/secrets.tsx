@@ -72,6 +72,17 @@ export const updateSecretThunk = createAsyncThunk(
         return secret
     }
 )
+const getTokenRemembered = (): string | null => {
+    const tokenEncrypted = localStorage.getItem('pass_token')
+    return tokenEncrypted ? atob(tokenEncrypted) : null;
+}
+export const rememberTokenThunk = createAsyncThunk(
+    'secrets/rememberToken',
+    async (token: string) => {
+        localStorage.setItem('pass_token', btoa(token))
+        return true;
+    }
+)
 
 
 interface secretsState {
@@ -80,6 +91,7 @@ interface secretsState {
     currentItem: Secret | null;
     isDecrypted: boolean;
     errors: Array<any>;
+    token: string | null;
 }
 
 const initialState: secretsState = {
@@ -88,6 +100,7 @@ const initialState: secretsState = {
     currentItem: null,
     isDecrypted: false,
     errors: [],
+    token: null,
 }
 
 export const secretsSlice = createSlice({
