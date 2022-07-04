@@ -52,6 +52,16 @@ class SecretService {
                 return null
             })
     }
+
+    async getTypes() {
+        return this.http.get('secrets/types')
+            .then((response) => {
+                return response.data
+            })
+            .catch((response) => {
+                return []
+            })
+    }
     
 }
 

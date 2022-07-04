@@ -1,5 +1,8 @@
 import { Component } from "react";
+import { connect } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
 import { Secret } from "../../store/slices/secrets";
+import Form from "../form/Form";
 import TokenModal from "../tokenModal/tokenModal";
 import LoginContent, { getLoginContentFieldsFromForm } from "./login/loginContent";
 import LoginFlags, { getLoginFlagsFieldsFromForm } from "./login/loginFlags";
@@ -11,6 +14,8 @@ export interface SecretDetailProps {
     isDecrypted: boolean;
     errors: Array<any>;
     onSaveItem: any;
+    dispatch: AppDispatch;
+    types: any;
 }
 
 export interface SecretDetailState {
@@ -107,7 +112,8 @@ class SecretDetail extends Component<SecretDetailProps, SecretDetailState> {
         const { item, errors, isDecrypted } = this.props
         return (
             <div className="">
-                <form onSubmit={this.encryptSecret} method="POST">
+                <Form />
+                {/* <form onSubmit={this.encryptSecret} method="POST">
                     <div className="sm:overflow-hidden">
                         <div className="bg-white space-y-6 p-6">
                             <div className="bg-gray-100 p-3 grid grid-cols-6">
@@ -161,12 +167,16 @@ class SecretDetail extends Component<SecretDetailProps, SecretDetailState> {
                         </button>
                         </div>
                     </div>
-                </form>
-                <TokenModal open={this.state.tokenModalOpened} mode={this.state.tokenModalMode} onClose={this.closeTokenModal} onToken={this.decryptItem} errors={errors}/>
+                </form> */}
+                {/* <TokenModal open={this.state.tokenModalOpened} mode={this.state.tokenModalMode} onClose={this.closeTokenModal} onToken={this.decryptItem} errors={errors}/> */}
             </div>
         )
     }
 }
-
-export default SecretDetail;
+export default connect((state: RootState) => {
+    return {
+        item: state.secrets.currentItem,
+        types: state.secrets.types
+    }
+})(SecretDetail)
 

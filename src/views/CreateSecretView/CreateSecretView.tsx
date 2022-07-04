@@ -6,7 +6,8 @@ import { getSecretDecryptedThunk, getSecretsThunk, getSecretThunk, getSecretType
 import { Params, useParams } from "react-router-dom";
 import { current } from "@reduxjs/toolkit";
 import SecretDetail from "../../components/secretDetail/secretDetail";
-export interface SecretsListViewProps {
+import Form from "../../components/form/Form";
+export interface CreateSecretViewProps {
     isLoading: boolean;
     items: Array<Secret>;
     dispatch: AppDispatch;
@@ -15,46 +16,32 @@ export interface SecretsListViewProps {
     isDecrypted: boolean;
     errors: Array<any>;
 }
-class SecretsListView extends Component<SecretsListViewProps> {
+class CreateSecretView extends Component<CreateSecretViewProps> {
     mounted = false;
     componentDidMount() {
         if (this.mounted) return; this.mounted = true;
         this.fetchItems()
-        this.fetchCurrentItem()
     }
     fetchItems = () => {
         const {dispatch} = this.props
         dispatch(getSecretTypesThunk())
         dispatch(getSecretsThunk())
     }
-    fetchCurrentItem = () => {
-        const {params, dispatch} = this.props
-        if(params.id) {
-            dispatch(getSecretThunk(params.id))
-        }
-    }
+
     onSelectSecret = (item: any) => {
         const {dispatch} = this.props
         dispatch(getSecretThunk(item.id))
 
     }
-    decryptItem = (item: Secret, token: string) => {
-        const { dispatch } = this.props
-        dispatch(getSecretDecryptedThunk({id: item.id, token}))
-    }
-    saveItem = (item: Secret, token: string) => {
-        const { dispatch } = this.props
-        dispatch(updateSecretThunk({...item, token}))
-    }
     
     render() {
-        const { isLoading, items, currentItem, isDecrypted, errors } = this.props
+        const { isLoading, items, currentItem, isDecrypted, errors, params } = this.props
         return (
             <div className="flex w-full h-screen">
                 <SecretsListSidebar items={items} isLoading={isLoading} onSelectSecret={this.onSelectSecret} currentItem={currentItem} />
                 <div className="flex-initial w-3/4">
-                    {isLoading ? <div>Loading...</div> : null}
-                    {!isLoading && currentItem ? <SecretDetail onDecryptItem={this.decryptItem} onSaveItem={this.saveItem} isDecrypted={isDecrypted} errors={errors} /> : null}
+                    Create
+                    <Form type={params.type as string} item={{name: 'test', flags: {website: 'localhost'}, content: { urls: []}}}/>
                 </div>
             </div>
         )
@@ -69,7 +56,7 @@ export default connect((state: RootState) => {
         isDecrypted: state.secrets.isDecrypted,
         errors: state.secrets.errors,
     }
-})(withRouter(SecretsListView))
+})(withRouter(CreateSecretView))
 
 function withRouter(Component: any) {
     function ComponentWithRouter(props: any) {

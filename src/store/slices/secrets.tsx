@@ -13,6 +13,15 @@ export interface Secret{
     createdAt: Date;
     updatedAt: Date;
 }
+
+export const getSecretTypesThunk = createAsyncThunk(
+    'secrets/getSecretTypes',
+    async () => {
+        let types = await secretsService.getTypes()
+        return types
+    }
+)
+
 export const getSecretsThunk = createAsyncThunk(
     'secrets/getSecrets',
     async () => {
@@ -92,6 +101,7 @@ interface secretsState {
     isDecrypted: boolean;
     errors: Array<any>;
     token: string | null;
+    types: any;
 }
 
 const initialState: secretsState = {
@@ -101,6 +111,7 @@ const initialState: secretsState = {
     isDecrypted: false,
     errors: [],
     token: null,
+    types: {},
 }
 
 export const secretsSlice = createSlice({
@@ -108,6 +119,17 @@ export const secretsSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
+        builder
+            .addCase(getSecretTypesThunk.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(getSecretTypesThunk.fulfilled, (state, action) => {
+                state.types = action.payload
+                state.isLoading = false
+            })
+            .addCase(getSecretTypesThunk.rejected, (state) => {
+                state.isLoading = false
+            })
         builder
             .addCase(getSecretsThunk.pending, (state) => {
                 state.isLoading = true
