@@ -1,17 +1,19 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
 import faviconService from "../../services/favicon.service";
+import { withRouter } from "../../services/withRouter";
 import { Secret } from "../../store/slices/secrets";
 import SecretIcon from "../secretIcon/secretIcon";
-export interface SecretsListSidebarItemProps {
+export interface SecretsSidebarItemProps {
     item: Secret;
-    onSelectSecret: any;
     currentItem: Secret | null;
+    navigate: any;
 }
-class SecretsListSidebarItem extends Component<SecretsListSidebarItemProps> {
+class SecretsSidebarItem extends Component<SecretsSidebarItemProps> {
     onClickItem = () => {
-        const {item, onSelectSecret} = this.props
-        onSelectSecret(item)
+        const {item, navigate} = this.props
+        navigate(item.id)
+        
     }
 
     get isItemSelected() {
@@ -42,5 +44,5 @@ class SecretsListSidebarItem extends Component<SecretsListSidebarItemProps> {
     }
 }
 
-export default SecretsListSidebarItem;
+export default withRouter(SecretsSidebarItem);
 

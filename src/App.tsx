@@ -4,14 +4,18 @@ import { BrowserRouter, Route, RouteProps, Routes } from 'react-router-dom'
 import routesConfig from './config/routes'
 
 class App extends Component {
+  getRoute(route: any) {
+    return (
+        <Route key={route.path} path={route.path} element={createElement(route.component)} caseSensitive>
+            {route.childrens && route.childrens.map((child: any) => {
+                return this.getRoute(child)
+              })
+            }
+        </Route>);
+  }
   get routes(): JSX.Element[] {
     const routes = routesConfig.map((route) => {
-      const routeProps: RouteProps = {
-        path: route.path,
-        element: createElement(route.component),
-        
-      }
-      return <Route key={route.path} caseSensitive {...routeProps} />
+      return this.getRoute(route);
     })
     return routes;
   }

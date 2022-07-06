@@ -41,6 +41,18 @@ class SecretService {
             })
     }
 
+    async createSecret(data: any, token: string) {
+        return this.http.post('secrets', data, {
+            headers: {'token-encryption': token }
+        })
+            .then((response) => {
+                return response.data
+            })
+            .catch(() => {
+                return null
+            })
+    }
+
     async updateSecret(id: string, data: any, token: string) {
         return this.http.put(`secrets/${id}`, data, {
             headers: {'token-encryption': token }

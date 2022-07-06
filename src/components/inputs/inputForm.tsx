@@ -16,7 +16,7 @@ export interface InputProps {
 export default function InputForm(props: InputProps) {
     const {inputName, name, type, secret, encrypted, canCopy, value, onCopy, onChange} = props
     const typeInput = secret ? 'password' : 'text'
-    const setValueInput = (value: any) => {
+    const setArrayInput = (value: any) => {
         onChange(inputName, value)
     }
     const onChangeInput = (event: any) => {
@@ -37,10 +37,18 @@ export default function InputForm(props: InputProps) {
                     onChange={onChangeInput}
                     />
                 ) : null }
-                {type === 'array' ? (
+                {type === 'array' && Array.isArray(value) ? (
                     <TagsInput
                     value={value}
-                    onChange={setValueInput}
+                    onChange={setArrayInput}
+                    name={inputName}
+                    placeHolder="enter urls and press enter"
+                    />
+                ) : null }
+                {type === 'array' && !Array.isArray(value) ? (
+                    <TagsInput
+                    value={[]}
+                    onChange={setArrayInput}
                     name={inputName}
                     placeHolder="enter urls and press enter"
                     />

@@ -70,11 +70,24 @@ export const getSecretDecryptedThunk = createAsyncThunk(
     }
 )
 
+export const createSecretThunk = createAsyncThunk(
+    'secrets/createSecret',
+    async (data: {type: string, global: any, flags: any, content: any, token: string}) => {
+        let secret = await secretsService.createSecret({
+            type: data.type.toUpperCase(),
+            global: data.global,
+            flags: data.flags,
+            content: data.content
+        }, data.token)
+        return secret
+    }
+)
+
 export const updateSecretThunk = createAsyncThunk(
     'secrets/updateSecret',
-    async (data: {id: string, name: string, flags: any, content: any, token: string}) => {
+    async (data: {id: string, global: any, flags: any, content: any, token: string}) => {
         let secret = await secretsService.updateSecret(data.id, {
-            name: data.name,
+            global: data.global,
             flags: data.flags,
             content: data.content
         }, data.token)
@@ -110,7 +123,7 @@ const initialState: secretsState = {
     currentItem: null,
     isDecrypted: false,
     errors: [],
-    token: null,
+    token: 'test',
     types: {},
 }
 
@@ -166,6 +179,21 @@ export const secretsSlice = createSlice({
                 state.isDecrypted = true
             })
             .addCase(getSecretDecryptedThunk.rejected, (state, action) => {
+                state.isLoading = false
+                state.isDecrypted = false
+                state.errors = [action.error.message]
+            })
+        builder
+            .addCase(createSecretThunk.pending, (state) => {
+                state.isLoading = true
+                state.isDecrypted = false
+            })
+            .addCase(createSecretThunk.fulfilled, (state, action) => {
+                state.currentItem = action.payload
+                state.isLoading = false
+                state.isDecrypted = true
+            })
+            .addCase(createSecretThunk.rejected, (state, action) => {
                 state.isLoading = false
                 state.isDecrypted = false
                 state.errors = [action.error.message]
